@@ -1,7 +1,7 @@
 package software.bernie.example.registry;
 
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -20,11 +20,11 @@ public class BlockRegistry {
     }
 
     private static <B extends Block> B register(B block, ResourceLocation name) {
-        Registry.register(BuiltInRegistries.BLOCK, name, block);
+        Registry.register(Registry.BLOCK, name, block);
         BlockItem item = new BlockItem(block, (new Item.Properties()));
 
         item.registerBlocks(Item.BY_BLOCK, item);
-        Registry.register(BuiltInRegistries.ITEM, name, item);
+        Registry.register(Registry.ITEM, name, item);
         return block;
     }
 }

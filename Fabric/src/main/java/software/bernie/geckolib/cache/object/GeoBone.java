@@ -1,10 +1,11 @@
 package software.bernie.geckolib.cache.object;
 
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3d;
+import com.mojang.math.Vector4f;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Vector3d;
-import org.joml.Vector4f;
+import net.minecraft.Util;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.state.BoneSnapshot;
 
@@ -69,10 +70,10 @@ public class GeoBone implements CoreGeoBone {
 		this.trackingMatrices = false;
 		this.hidden = this.dontRender == Boolean.TRUE;
 
-		this.worldSpaceNormal.identity();
-		this.worldSpaceMatrix.identity();
-		this.localSpaceMatrix.identity();
-		this.modelSpaceMatrix.identity();
+		this.worldSpaceNormal.setIdentity();
+		this.worldSpaceMatrix.setIdentity();
+		this.localSpaceMatrix.setIdentity();
+		this.modelSpaceMatrix.setIdentity();
 	}
 
 	@Override
@@ -333,7 +334,7 @@ public class GeoBone implements CoreGeoBone {
 	}
 
 	public void setModelSpaceMatrix(Matrix4f matrix) {
-		this.modelSpaceMatrix.set(matrix);
+		this.modelSpaceMatrix.load(matrix);
 	}
 
 	public Matrix4f getLocalSpaceMatrix() {
@@ -343,7 +344,7 @@ public class GeoBone implements CoreGeoBone {
 	}
 
 	public void setLocalSpaceMatrix(Matrix4f matrix) {
-		this.localSpaceMatrix.set(matrix);
+		this.localSpaceMatrix.load(matrix);
 	}
 
 	public Matrix4f getWorldSpaceMatrix() {
@@ -353,7 +354,7 @@ public class GeoBone implements CoreGeoBone {
 	}
 
 	public void setWorldSpaceMatrix(Matrix4f matrix) {
-		this.worldSpaceMatrix.set(matrix);
+		this.worldSpaceMatrix.load(matrix);
 	}
 
 	public void setWorldSpaceNormal(Matrix3f matrix) {
@@ -368,7 +369,8 @@ public class GeoBone implements CoreGeoBone {
 	 * Get the position of the bone relative to its owner
 	 */
 	public Vector3d getLocalPosition() {
-		Vector4f vec = getLocalSpaceMatrix().transform(new Vector4f(0, 0, 0, 1));
+		Vector4f vec = new Vector4f(0, 0, 0, 1);
+		vec.transform(getLocalSpaceMatrix());
 		
 		return new Vector3d(vec.x(), vec.y(), vec.z());
 	}
@@ -377,7 +379,8 @@ public class GeoBone implements CoreGeoBone {
 	 * Get the position of the bone relative to the model it belongs to
 	 */
 	public Vector3d getModelPosition() {
-		Vector4f vec = getModelSpaceMatrix().transform(new Vector4f(0, 0, 0, 1));
+		Vector4f vec = new Vector4f(0, 0, 0, 1);
+		vec.transform(getModelSpaceMatrix());
 
 		return new Vector3d(-vec.x() * 16f, vec.y() * 16f, vec.z() * 16f);
 	}
@@ -386,7 +389,8 @@ public class GeoBone implements CoreGeoBone {
 	 * Get the position of the bone relative to the world
 	 */
 	public Vector3d getWorldPosition() {
-		Vector4f vec = getWorldSpaceMatrix().transform(new Vector4f(0, 0, 0, 1));
+		Vector4f vec = new Vector4f(0, 0, 0, 1);
+		vec.transform(getWorldSpaceMatrix());
 
 		return new Vector3d(vec.x(), vec.y(), vec.z());
 	}
@@ -394,17 +398,18 @@ public class GeoBone implements CoreGeoBone {
 	public void setModelPosition(Vector3d pos) {
 		// Doesn't work on bones with parent transforms
 		GeoBone parent = getParent();
-		Matrix4f matrix = (parent == null ? new Matrix4f().identity() : new Matrix4f(parent.getModelSpaceMatrix())).invert();
-		Vector4f vec = matrix.transform(new Vector4f(-(float)pos.x / 16f, (float)pos.y / 16f, (float)pos.z / 16f, 1));
+		Matrix4f matrix = (parent == null ? Util.make(new Matrix4f(), Matrix4f::setIdentity) : Util.make(new Matrix4f(parent.getModelSpaceMatrix()), Matrix4f::invert));
+		Vector4f vec = new Vector4f(-(float)pos.x / 16f, (float)pos.y / 16f, (float)pos.z / 16f, 1);
+		vec.transform(matrix);
 
 		updatePosition(-vec.x() * 16f, vec.y() * 16f, vec.z() * 16f);
 	}
 
 	public Matrix4f getModelRotationMatrix() {
 		Matrix4f matrix = new Matrix4f(getModelSpaceMatrix());
-		matrix.m03(0);
-		matrix.m13(0);
-		matrix.m23(0);
+		matrix.m03 = (0);
+		matrix.m13 = (0);
+		matrix.m23 = (0);
 
 		return matrix;
 	}

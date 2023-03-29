@@ -3,7 +3,8 @@ package software.bernie.geckolib.renderer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -14,8 +15,6 @@ import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.constant.DataTickets;
@@ -174,7 +173,8 @@ public class GeoBlockRenderer<T extends BlockEntity & GeoAnimatable> implements 
 
 			bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
 			bone.setLocalSpaceMatrix(localMatrix);
-			bone.setWorldSpaceMatrix(worldState.translate(new Vector3f(pos.getX(), pos.getY(), pos.getZ())));
+			worldState.translate(new Vector3f(pos.getX(), pos.getY(), pos.getZ()));
+			bone.setWorldSpaceMatrix(worldState);
 		}
 
 		GeoRenderer.super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue,
@@ -186,12 +186,12 @@ public class GeoBlockRenderer<T extends BlockEntity & GeoAnimatable> implements 
 	 */
 	protected void rotateBlock(Direction facing, PoseStack poseStack) {
 		switch (facing) {
-			case SOUTH -> poseStack.mulPose(Axis.YP.rotationDegrees(180));
-			case WEST -> poseStack.mulPose(Axis.YP.rotationDegrees(90));
-			case NORTH -> poseStack.mulPose(Axis.YP.rotationDegrees(0));
-			case EAST -> poseStack.mulPose(Axis.YP.rotationDegrees(270));
-			case UP -> poseStack.mulPose(Axis.XP.rotationDegrees(90));
-			case DOWN -> poseStack.mulPose(Axis.XN.rotationDegrees(90));
+			case SOUTH -> poseStack.mulPose(Vector3f.YP.rotationDegrees(180));
+			case WEST -> poseStack.mulPose(Vector3f.YP.rotationDegrees(90));
+			case NORTH -> poseStack.mulPose(Vector3f.YP.rotationDegrees(0));
+			case EAST -> poseStack.mulPose(Vector3f.YP.rotationDegrees(270));
+			case UP -> poseStack.mulPose(Vector3f.XP.rotationDegrees(90));
+			case DOWN -> poseStack.mulPose(Vector3f.XN.rotationDegrees(90));
 		}
 	}
 

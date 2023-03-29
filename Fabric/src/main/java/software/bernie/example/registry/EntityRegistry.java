@@ -2,7 +2,7 @@ package software.bernie.example.registry;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -33,7 +33,7 @@ public class EntityRegistry {
 
     public static <T extends Mob> EntityType<T> registerMob(String name, EntityType.EntityFactory<T> entity,
                                                             float width, float height) {
-        return Registry.register(BuiltInRegistries.ENTITY_TYPE,
+        return Registry.register(Registry.ENTITY_TYPE,
                 new ResourceLocation(GeckoLib.MOD_ID, name),FabricEntityTypeBuilder.create(MobCategory.CREATURE, entity).dimensions(EntityDimensions.scalable(width, height)).build());
     }
 }

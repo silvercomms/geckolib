@@ -9,7 +9,7 @@ buildscript {
 }
 
 plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
+    id 'fabric-loom' version '1.1-SNAPSHOT'
     id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '7.1.0'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
@@ -149,18 +149,13 @@ publishing {
 publishing {
     repositories {
         maven {
-	      name = "cloudsmith"
-	      url = "https://maven.cloudsmith.io/geckolib3/geckolib/"
-	      def releasesRepoUrl = "https://maven.cloudsmith.io/geckolib3/geckolib/"
-	      def snapshotsRepoUrl = "https://maven.cloudsmith.io/geckolib3/geckolib/"
-	      url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-	      credentials {
-                def envUsername = System.getenv("cloudUsername")
-                def envPassword = System.getenv("cloudPassword")
-                username = envUsername == null ? findProperty("cloudUsername") : envUsername
-                password = envPassword == null ? findProperty("cloudPassword") : envPassword
-	      }
-	    }
+            name = "willBlRepositorySilver"
+            url = "https://maven.willbl.dev/silver"
+            credentials(PasswordCredentials)
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
     }
 }
 

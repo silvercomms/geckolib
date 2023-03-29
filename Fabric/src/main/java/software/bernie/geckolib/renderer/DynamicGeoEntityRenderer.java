@@ -2,6 +2,9 @@ package software.bernie.geckolib.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
+import com.mojang.math.Vector4f;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -9,9 +12,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 import software.bernie.geckolib.cache.object.*;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.model.GeoModel;
@@ -83,12 +83,12 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
 			Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.entityRenderTranslations);
 
 			bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
-			localMatrix.translate(new Vector3f(getRenderOffset(this.animatable, 1).toVector3f()));
+			localMatrix.translate(new Vector3f(getRenderOffset(this.animatable, 1)));
 			bone.setLocalSpaceMatrix(localMatrix);
 
-			Matrix4f worldState = new Matrix4f(localMatrix);;
+			Matrix4f worldState = localMatrix.copy();
 
-			worldState.translate(new Vector3f(this.animatable.position().toVector3f()));
+			worldState.translate(new Vector3f(this.animatable.position()));
 			bone.setWorldSpaceMatrix(worldState);
 		}
 
@@ -154,7 +154,8 @@ public abstract class DynamicGeoEntityRenderer<T extends Entity & GeoAnimatable>
 		}
 
 		for (GeoVertex vertex : quad.vertices()) {
-			Vector4f vector4f = poseState.transform(new Vector4f(vertex.position().x(), vertex.position().y(), vertex.position().z(), 1.0f));
+			Vector4f vector4f = new Vector4f(vertex.position().x(), vertex.position().y(), vertex.position().z(), 1.0f);
+			vector4f.transform(poseState);
 			float texU = (vertex.texU() * entityTextureSize.firstInt()) / boneTextureSize.firstInt();
 			float texV = (vertex.texV() * entityTextureSize.secondInt()) / boneTextureSize.secondInt();
 

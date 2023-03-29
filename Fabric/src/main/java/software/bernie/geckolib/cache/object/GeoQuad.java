@@ -1,7 +1,6 @@
 package software.bernie.geckolib.cache.object;
 
-import org.joml.Vector3f;
-
+import com.mojang.math.Vector3f;
 import net.minecraft.core.Direction;
 
 /**

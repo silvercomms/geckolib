@@ -1,8 +1,8 @@
 package software.bernie.example.registry;
 
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
@@ -36,33 +36,33 @@ public class ItemRegistry {
     public static final SpawnEggItem COOL_KID_SPAWN_EGG = registerItem("cool_kid_spawn_egg", new SpawnEggItem(EntityRegistry.COOL_KID, 0x5F2A31, 0x6F363E, new Item.Properties()));
     public static final SpawnEggItem GREMLIN_SPAWN_EGG = registerItem("gremlin_spawn_egg", new SpawnEggItem(EntityRegistry.GREMLIN, 0x505050, 0x606060, new Item.Properties()));
     
-    public static final CreativeModeTab ITEM_GROUP = FabricItemGroup
-            .builder(new ResourceLocation(GeckoLib.MOD_ID, "geckolib_examples"))
+    public static final CreativeModeTab ITEM_GROUP = FabricItemGroupBuilder
+            .create(new ResourceLocation(GeckoLib.MOD_ID, "geckolib_examples"))
             .icon(() -> new ItemStack(ItemRegistry.JACK_IN_THE_BOX))
-            .displayItems((enabledFeatures, entries, operatorEnabled) -> {
-                entries.accept(ItemRegistry.JACK_IN_THE_BOX);
-                entries.accept(ItemRegistry.PISTOL);
-                entries.accept(ItemRegistry.GECKO_ARMOR_HELMET);
-                entries.accept(ItemRegistry.GECKO_ARMOR_CHESTPLATE);
-                entries.accept(ItemRegistry.GECKO_ARMOR_LEGGINGS);
-                entries.accept(ItemRegistry.GECKO_ARMOR_BOOTS);
-                entries.accept(ItemRegistry.WOLF_ARMOR_HELMET);
-                entries.accept(ItemRegistry.WOLF_ARMOR_CHESTPLATE);
-                entries.accept(ItemRegistry.WOLF_ARMOR_LEGGINGS);
-                entries.accept(ItemRegistry.WOLF_ARMOR_BOOTS);
-                entries.accept(BlockRegistry.GECKO_HABITAT_BLOCK);
-                entries.accept(BlockRegistry.FERTILIZER_BLOCK);
-                entries.accept(ItemRegistry.BAT_SPAWN_EGG);
-                entries.accept(ItemRegistry.BIKE_SPAWN_EGG);
-                entries.accept(ItemRegistry.RACE_CAR_SPAWN_EGG);
-                entries.accept(ItemRegistry.PARASITE_SPAWN_EGG);
-                entries.accept(ItemRegistry.MUTANT_ZOMBIE_SPAWN_EGG);
-                entries.accept(ItemRegistry.GREMLIN_SPAWN_EGG);
-                entries.accept(ItemRegistry.FAKE_GLASS_SPAWN_EGG);
-                entries.accept(ItemRegistry.COOL_KID_SPAWN_EGG);
+            .appendItems((entries, tab) -> {
+                entries.add(ItemRegistry.JACK_IN_THE_BOX.getDefaultInstance());
+                entries.add(ItemRegistry.PISTOL.getDefaultInstance());
+                entries.add(ItemRegistry.GECKO_ARMOR_HELMET.getDefaultInstance());
+                entries.add(ItemRegistry.GECKO_ARMOR_CHESTPLATE.getDefaultInstance());
+                entries.add(ItemRegistry.GECKO_ARMOR_LEGGINGS.getDefaultInstance());
+                entries.add(ItemRegistry.GECKO_ARMOR_BOOTS.getDefaultInstance());
+                entries.add(ItemRegistry.WOLF_ARMOR_HELMET.getDefaultInstance());
+                entries.add(ItemRegistry.WOLF_ARMOR_CHESTPLATE.getDefaultInstance());
+                entries.add(ItemRegistry.WOLF_ARMOR_LEGGINGS.getDefaultInstance());
+                entries.add(ItemRegistry.WOLF_ARMOR_BOOTS.getDefaultInstance());
+                entries.add(BlockRegistry.GECKO_HABITAT_BLOCK.asItem().getDefaultInstance());
+                entries.add(BlockRegistry.FERTILIZER_BLOCK.asItem().getDefaultInstance());
+                entries.add(ItemRegistry.BAT_SPAWN_EGG.getDefaultInstance());
+                entries.add(ItemRegistry.BIKE_SPAWN_EGG.getDefaultInstance());
+                entries.add(ItemRegistry.RACE_CAR_SPAWN_EGG.getDefaultInstance());
+                entries.add(ItemRegistry.PARASITE_SPAWN_EGG.getDefaultInstance());
+                entries.add(ItemRegistry.MUTANT_ZOMBIE_SPAWN_EGG.getDefaultInstance());
+                entries.add(ItemRegistry.GREMLIN_SPAWN_EGG.getDefaultInstance());
+                entries.add(ItemRegistry.FAKE_GLASS_SPAWN_EGG.getDefaultInstance());
+                entries.add(ItemRegistry.COOL_KID_SPAWN_EGG.getDefaultInstance());
             }).build();
 
     public static <I extends Item> I registerItem(String name, I item) {
-        return Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(GeckoLib.MOD_ID, name), item);
+        return Registry.register(Registry.ITEM, new ResourceLocation(GeckoLib.MOD_ID, name), item);
     }
 }
