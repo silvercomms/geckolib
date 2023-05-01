@@ -18,6 +18,8 @@ public final class GeckoLibMod implements ModInitializer {
 	public static final String DISABLE_EXAMPLES_PROPERTY_KEY = "geckolib.disable_examples";
 	private static final boolean isDevelopmentEnvironment = FabricLoader.getInstance().isDevelopmentEnvironment();
 
+	public static boolean DISABLE_IN_DEV = false;
+
 	@Override
 	public void onInitialize() {
 		GeckoLib.initialize();
